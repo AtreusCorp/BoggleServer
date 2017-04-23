@@ -436,11 +436,9 @@ int main() {
 	int maxfd;
 	struct client *cur_client, *temp_client;
 
-	/* Taken from muffinman.c from here*/
 	fd_set fdlist;
 	FD_ZERO(&fdlist);
 	FD_SET(sockfd, &fdlist);
-	/* to here */
 
 	// Build new game board
 	initialize_dice_members();
