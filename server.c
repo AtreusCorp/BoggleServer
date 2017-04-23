@@ -178,13 +178,13 @@ void inform_command_error(int clientfd) {
 	}
 }
 
-/* Searches the first inbuf characters of buf for a network newline ("\r\n").
-  Return the location of the '\r' if the network newline is found,
-  or -1 otherwise. Code was written completely by us in Lab 11. */
-int find_network_newline(const char *buf, int inbuf) {
+/* Searches the first inbuf characters of buf for a newline ("\n").
+  Return the location of the '\n' if the newline is found,
+  or -1 otherwise. */
+int find_newline(const char *buf, int inbuf) {
   int n = 0;
   while (n < inbuf){
-      if (buf[n] == '\r' && buf[n + 1] == '\n'){
+      if (buf[n] == '\n'){
           return n;
       }
       ++n;
@@ -341,12 +341,12 @@ int read_client_input(int clientfd) {
 	return nbytes;
 }
 
-/* Returns 1 if the client associated with clientfd has a network newline in its inbuf,
+/* Returns 1 if the client associated with clientfd has a newline in its inbuf,
 0 otherwise.*/
 int check_client_input(int clientfd){
 	int newline;
 	struct client *cur_client = search_client_by_fd(clientfd);
-	if ((newline = find_network_newline(cur_client->inbuf,
+	if ((newline = find_newline(cur_client->inbuf,
 									   cur_client->buf_ptr - cur_client->inbuf)) >= 0){
 		cur_client->inbuf[newline] = '\0';
 		return 1;
@@ -429,16 +429,18 @@ int main() {
 	// Socket setup
 	memset(&sockaddress, '\0', sizeof(sockaddress));
 	sockaddress.sin_family = AF_INET;
-	sockaddress.sin_addr.s_addr = INADDR_ANY;
+	sockaddress.sin_addr.s_addr = htonl(INADDR_ANY);
 	sockaddress.sin_port = htons(PORT);
 
 	sockfd = setup_in_socket(&sockaddress);
 	int maxfd;
 	struct client *cur_client, *temp_client;
 
+	/* Taken from muffinman.c from here*/
 	fd_set fdlist;
 	FD_ZERO(&fdlist);
 	FD_SET(sockfd, &fdlist);
+	/* to here */
 
 	// Build new game board
 	initialize_dice_members();
