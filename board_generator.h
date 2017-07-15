@@ -1,3 +1,4 @@
+// Written by Lino Lastella
 #ifndef BOARD_GENERATOR_H
 #define BOARD_GENERATOR_H
 
