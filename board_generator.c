@@ -1,3 +1,4 @@
+// Written by Lino Lastella
 #include "board_generator.h"
 
 GameBoard gb;
